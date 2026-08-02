@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CartService } from '../../../core/services/cart';
 import { CurrencyFormatPipe } from '../../pipes/currency-format-pipe';
 
-const WHATSAPP_PHONE = '51915107935';
+const WHATSAPP_PHONE = '51954654504';
 
 @Component({
   selector: 'app-cart-drawer',

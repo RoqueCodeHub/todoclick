@@ -75,14 +75,14 @@
             <span class="text-xs font-semibold uppercase tracking-wide text-primary-500">Recién llegado</span>
             <h2 class="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">Novedades</h2>
         </div>
-        <a href="/productos"
-            class="hidden items-center gap-1 text-sm font-semibold text-primary-600 transition hover:text-primary-500 sm:inline-flex">
+        <button type="button" (click)="scrollToCategories($event)"
+            class="hidden items-center gap-1 text-sm font-semibold text-primary-600 transition hover:text-primary-500 sm:inline-flex cursor-pointer">
             Ver todo
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0-4 4m4-4H3" />
             </svg>
-        </a>
+        </button>
     </div>
 
     <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
