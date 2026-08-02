@@ -1,0 +1,172 @@
+<header class="sticky top-0 z-50 bg-white shadow-sm">
+    <!-- Fila principal -->
+    <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+
+        <!-- Logo -->
+        <a routerLink="/" class="flex shrink-0 items-center gap-2" (click)="closeMenu()">
+            <span
+                class="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                TodoClick
+            </span>
+        </a>
+
+        <!-- Buscador (desktop) -->
+        <div class="hidden flex-1 max-w-xl sm:block sm:ml-[90px]">
+            <div
+                class="flex items-center overflow-hidden rounded-full border border-gray-200 focus-within:border-primary-400">
+                <input type="text" placeholder="Buscar productos, marcas y más..."
+                    class="w-full bg-transparent px-4 py-2 text-sm text-gray-700 outline-none placeholder:text-gray-400" />
+                <button type="button" aria-label="Buscar"
+                    class="flex h-full items-center justify-center bg-primary-500 px-4 py-2.5 text-white transition hover:bg-primary-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-4.35-4.35M17 10.5A6.5 6.5 0 1 1 4 10.5a6.5 6.5 0 0 1 13 0Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="ml-auto flex items-center gap-1 sm:ml-0">
+
+            <!-- Buscar (mobile) -->
+            <button type="button" (click)="toggleMobileSearch()" aria-label="Buscar"
+                class="rounded-full p-2 text-gray-600 transition hover:bg-primary-50 hover:text-primary-600 sm:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35M17 10.5A6.5 6.5 0 1 1 4 10.5a6.5 6.5 0 0 1 13 0Z" />
+                </svg>
+            </button>
+
+            <!-- Usuario -->
+            <button type="button"
+                class="hidden items-center gap-2 rounded-full p-2 text-gray-600 transition hover:bg-primary-50 hover:text-primary-600 md:inline-flex"
+                aria-label="Mi cuenta">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a8.25 8.25 0 0 1 15 0" />
+                </svg>
+                <span class="text-sm font-medium">Mi cuenta</span>
+            </button>
+
+            <!-- Carrito -->
+            <button type="button" (click)="cart.toggle()"
+                class="relative rounded-full p-2 text-gray-600 transition hover:bg-primary-50 hover:text-primary-600"
+                aria-label="Carrito de compras">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25h9.694c.9 0 1.687-.605 1.917-1.474l1.313-4.918a.75.75 0 0 0-.724-.933H5.106M7.5 14.25 5.106 5.34m2.394 8.91-.976 3.66a.75.75 0 0 0 .724.94H18M9 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm9 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                </svg>
+                @if (cartCount() > 0) {
+                <span
+                    class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary-500 text-[10px] font-semibold text-white">
+                    {{ cartCount() }}
+                </span>
+                }
+            </button>
+
+            <!-- Hamburguesa (mobile) -->
+            <button type="button"
+                class="inline-flex items-center justify-center rounded-full p-2 text-gray-700 transition hover:bg-primary-50 hover:text-primary-600 md:hidden"
+                aria-label="Abrir menú" [attr.aria-expanded]="isMenuOpen()" (click)="toggleMenu()">
+                @if (!isMenuOpen()) {
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+                </svg>
+                } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                }
+            </button>
+        </div>
+    </div>
+
+    <!-- Buscador (mobile, desplegable) -->
+    @if (isMobileSearchOpen()) {
+    <div class="border-t border-gray-100 px-4 py-3 sm:hidden">
+        <div
+            class="flex items-center overflow-hidden rounded-full border border-gray-200 focus-within:border-primary-400">
+            <input type="text" placeholder="Buscar productos..."
+                class="w-full bg-transparent px-4 py-2 text-sm text-gray-700 outline-none placeholder:text-gray-400" />
+            <button type="button" aria-label="Buscar"
+                class="flex h-full items-center justify-center bg-primary-500 px-4 py-2.5 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35M17 10.5A6.5 6.5 0 1 1 4 10.5a6.5 6.5 0 0 1 13 0Z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+    }
+
+    <!-- Fila de categorías (desktop) -->
+    <div class="hidden border-t border-gray-100 md:block">
+        <div class="mx-auto flex max-w-7xl items-center gap-6 px-4 py-2.5 sm:px-6 lg:px-8">
+            <button type="button" (click)="scrollToCategory('categorias-secciones', $event)"
+                class="flex shrink-0 items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer hover:text-primary-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+                </svg>
+                Todas las categorías
+            </button>
+            <nav class="flex items-center gap-5 overflow-x-auto lg:ml-[100px]">
+                @for (category of categories; track category.targetId) {
+                @if (category.disabled) {
+                <span
+                    class="whitespace-nowrap text-sm font-medium text-gray-300 cursor-not-allowed select-none relative group"
+                    title="Próximamente">
+                    {{ category.label }}
+                    <span class="absolute -top-7 left-1/2 -translate-x-1/2 rounded-md bg-gray-800 px-2 py-1 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">Próximamente</span>
+                </span>
+                } @else {
+                <button type="button" (click)="scrollToCategory(category.targetId)"
+                    class="whitespace-nowrap text-sm font-medium text-gray-600 transition-colors hover:text-primary-600 cursor-pointer bg-transparent border-none outline-none">
+                    {{ category.label }}
+                </button>
+                }
+                }
+            </nav>
+        </div>
+    </div>
+
+    <!-- Menú mobile -->
+    @if (isMenuOpen()) {
+    <div class="border-t border-gray-100 bg-white md:hidden">
+        <ul class="flex flex-col gap-1 px-4 py-3">
+            <li><a routerLink="/" (click)="closeMenu()"
+                    class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-600">Inicio</a>
+            </li>
+            @for (category of categories; track category.targetId) {
+            <li>
+                @if (category.disabled) {
+                <span
+                    class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-300 cursor-not-allowed select-none">
+                    {{ category.label }}
+                    <span class="rounded-full bg-gray-100 px-1.5 py-0.5 text-xs text-gray-400">Próximamente</span>
+                </span>
+                } @else {
+                <button type="button" (click)="scrollToCategory(category.targetId)"
+                    class="block w-full text-left rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-600 cursor-pointer bg-transparent border-none outline-none">
+                    {{ category.label }}
+                </button>
+                }
+            </li>
+            }
+            <li><a routerLink="/contacto" (click)="closeMenu()"
+                    class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-600">Contacto</a>
+            </li>
+        </ul>
+    </div>
+    }
+</header>

@@ -1,0 +1,174 @@
+<article
+    class="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-lg">
+
+    <!-- Contenedor Imagen -->
+    <div class="relative aspect-square overflow-hidden bg-gray-50 cursor-pointer" (click)="openModal($event)">
+        <img [src]="currentImage()" [alt]="product().name" loading="lazy"
+            class="h-full w-full object-cover transition-all duration-300 group-hover:scale-105" />
+
+        <!-- Flechas de navegación en Card (si hay >1 imágenes) -->
+        @if (productImages().length > 1) {
+        <button type="button" (click)="prevImage($event)" aria-label="Imagen anterior"
+            class="absolute left-1.5 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+
+        <button type="button" (click)="nextImage($event)" aria-label="Siguiente imagen"
+            class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+
+        <!-- Indicadores de imágenes en Card -->
+        <div class="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1 z-10">
+            @for (img of productImages(); track $index) {
+            <button type="button" (click)="setImageIndex($index, $event)" [attr.aria-label]="'Ver imagen ' + ($index + 1)"
+                class="h-1.5 rounded-full transition-all"
+                [class.w-4]="currentImageIndex() === $index"
+                [class.bg-white]="currentImageIndex() === $index"
+                [class.w-1.5]="currentImageIndex() !== $index"
+                [class.bg-white/50]="currentImageIndex() !== $index"></button>
+            }
+        </div>
+        }
+
+        <!-- Badges -->
+        <div class="absolute left-3 top-3 flex flex-col gap-1 pointer-events-none z-10">
+            @if (product().isNew) {
+            <span class="rounded-full bg-primary-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">Nuevo</span>
+            }
+            @if (hasDiscount()) {
+            <span class="rounded-full bg-gray-900 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">Oferta</span>
+            }
+        </div>
+
+        <!-- Wishlist -->
+        <button type="button" (click)="onToggleWishlist($event)" aria-label="Agregar a favoritos"
+            class="absolute right-3 top-3 rounded-full bg-white/90 p-2 text-gray-600 shadow-sm transition hover:bg-white hover:text-primary-500 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+            </svg>
+        </button>
+
+        <!-- Sin stock -->
+        @if (product().stock === 0) {
+        <div class="absolute inset-0 flex items-center justify-center bg-white/70 backdrop-blur-[1px] z-10">
+            <span class="rounded-full bg-gray-900/90 px-3 py-1 text-xs font-semibold text-white">Agotado</span>
+        </div>
+        }
+    </div>
+
+    <!-- Info producto -->
+    <div class="flex flex-1 flex-col gap-2 p-4">
+        <span class="text-xs font-medium uppercase tracking-wide text-primary-500">{{ product().category }}</span>
+        <h3 class="line-clamp-2 text-sm font-semibold text-gray-900">{{ product().name }}</h3>
+
+        <app-product-rating [rating]="product().rating" [reviewsCount]="product().reviewsCount" />
+
+        <app-product-price class="mt-auto" [price]="product().price" [oldPrice]="product().oldPrice" />
+
+        <button type="button" [disabled]="product().stock === 0" (click)="onAddToCart($event)"
+            class="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25h9.694c.9 0 1.687-.605 1.917-1.474l1.313-4.918a.75.75 0 0 0-.724-.933H5.106M7.5 14.25 5.106 5.34m2.394 8.91-.976 3.66a.75.75 0 0 0 .724.94H18M9 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm9 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+            {{ product().stock === 0 ? 'Agotado' : 'Agregar' }}
+        </button>
+    </div>
+</article>
+
+<!-- Ventana Emergente / Modal del Producto -->
+@if (isModalOpen()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+    (click)="closeModal($event)">
+    <div class="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl md:flex-row"
+        (click)="$event.stopPropagation()">
+
+        <!-- Botón Cerrar -->
+        <button type="button" (click)="closeModal($event)" aria-label="Cerrar modal"
+            class="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition hover:bg-gray-200 hover:text-gray-900">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Galería de imágenes en Modal -->
+        <div class="relative flex flex-1 flex-col items-center justify-center bg-gray-50 p-6 md:w-1/2">
+            <div class="relative aspect-square w-full overflow-hidden rounded-2xl bg-white shadow-sm flex items-center justify-center">
+                <img [src]="currentImage()" [alt]="product().name" class="max-h-full max-w-full object-contain" />
+
+                <!-- Flechas en Modal -->
+                @if (productImages().length > 1) {
+                <button type="button" (click)="prevImage($event)" aria-label="Anterior"
+                    class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-800 shadow-md backdrop-blur-sm transition hover:bg-white hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+
+                <button type="button" (click)="nextImage($event)" aria-label="Siguiente"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-800 shadow-md backdrop-blur-sm transition hover:bg-white hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+                }
+            </div>
+
+            <!-- Miniaturas en Modal -->
+            @if (productImages().length > 1) {
+            <div class="mt-4 flex gap-2 overflow-x-auto p-1 max-w-full">
+                @for (img of productImages(); track $index) {
+                <button type="button" (click)="setImageIndex($index, $event)"
+                    class="h-14 w-14 overflow-hidden rounded-xl border-2 bg-white transition-all shrink-0 cursor-pointer"
+                    [class.border-primary-500]="currentImageIndex() === $index"
+                    [class.border-transparent]="currentImageIndex() !== $index"
+                    [class.opacity-60]="currentImageIndex() !== $index">
+                    <img [src]="img" [alt]="product().name" class="h-full w-full object-cover" />
+                </button>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- Detalle de Producto en Modal -->
+        <div class="flex flex-1 flex-col justify-between p-6 md:w-1/2 overflow-y-auto">
+            <div class="flex flex-col gap-3">
+                <span class="w-fit rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-600">
+                    {{ product().category }}
+                </span>
+                <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ product().name }}</h2>
+
+                <app-product-rating [rating]="product().rating" [reviewsCount]="product().reviewsCount" />
+
+                <div class="my-2 border-y border-gray-100 py-4">
+                    <app-product-price [price]="product().price" [oldPrice]="product().oldPrice" />
+                </div>
+
+                <p class="text-xs text-gray-500">
+                    Stock disponible: <span class="font-semibold text-gray-800">{{ product().stock }} unidades</span>
+                </p>
+            </div>
+
+            <div class="mt-6 flex flex-col gap-3">
+                <button type="button" [disabled]="product().stock === 0" (click)="onAddToCart($event); closeModal()"
+                    class="flex w-full items-center justify-center gap-2 rounded-full bg-primary-500 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:bg-primary-400 disabled:bg-gray-200 disabled:text-gray-400 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25h9.694c.9 0 1.687-.605 1.917-1.474l1.313-4.918a.75.75 0 0 0-.724-.933H5.106M7.5 14.25 5.106 5.34m2.394 8.91-.976 3.66a.75.75 0 0 0 .724.94H18M9 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm9 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                    {{ product().stock === 0 ? 'Agotado' : 'Agregar al carrito' }}
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+}

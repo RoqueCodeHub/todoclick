@@ -1,3 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+@theme {
+
+    --font-sans: "Poppins", sans-serif;
+
+    --color-primary-50: #FCE6FE;
+    --color-primary-100: #F6B9FE;
+    --color-primary-200: #F08CFD;
+    --color-primary-300: #E95FFC;
+    --color-primary-400: #E12AFB;
+    --color-primary-500: #DD05FA;
+    --color-primary-600: #B504CD;
+    --color-primary-700: #8E03A0;
+    --color-primary-800: #660273;
+    --color-primary-900: #3E0146;
+    --color-primary-950: #160119;
+
+}
